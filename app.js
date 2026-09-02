@@ -2,6 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path")
 
+
+const authRouter = require("./routers/auth");
+
 const app = express()
 
 
@@ -14,6 +17,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")))
 
 
+// Routers
+app.use("/auth", authRouter);
 
 app.use((req, res) => {
     return res.status(404).json({
