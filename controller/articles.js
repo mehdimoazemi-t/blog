@@ -1,12 +1,13 @@
 const Article = require("../repository/articles");
 const Tags = require("../repository/tags");
+const { formatDateTime } = require("../utils/formatDateTime");
 
 exports.add = async (req, res, next) => {
-    
+
     try {
         const { title, content, slug, tags } = req.body
 
-     
+
         const article = await Article.create({
             title,
             content,
@@ -35,7 +36,19 @@ exports.findTagArticle = async (req, res, next) => {
 
         const articles = await Article.findArticlesByTag(tag.id)
 
-        return res.status(200).json(articles)
+        const formattedArticles = articles.map(article => {
+            return {
+                title: article.title,
+                content: article.content,
+                cover: article.cover,
+                slug: article.slug,
+                created_at: formatDateTime(article.created_at),
+                author: article.author,
+                tag: article.tag
+            };
+        });
+
+        return res.status(200).json(formattedArticles)
 
     } catch (error) {
         next(error)
