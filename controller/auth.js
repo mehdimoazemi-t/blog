@@ -2,6 +2,7 @@ const User = require("../repository/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const configs = require("../config");
+const svgCaptcha = require("svg-captcha");
 
 exports.register = async (req, res, next) => {
 
@@ -72,6 +73,24 @@ exports.login = async (req, res, next) => {
             accessToken,
             refreshToken
         })
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+exports.captcha = async (req, res, next) => {
+    try {
+
+        const captcha = svgCaptcha.create({
+            size: 5,
+            noise: 2,
+            color: true,
+            background: '#cc9966'
+        })
+
+
+        return res.status(200).json(captcha)
 
     } catch (error) {
         next(error)

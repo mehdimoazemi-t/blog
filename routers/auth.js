@@ -10,6 +10,7 @@ const router = express.Router()
 router.route("/register").post(validator(registerValidateSchema), controller.register)
 router.route("/login").post(validator(loginValidateSchema), controller.login)
 
-
+router.route("/captcha")
+    .get(controller.captcha)
 
 module.exports = router
