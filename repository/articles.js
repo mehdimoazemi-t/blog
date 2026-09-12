@@ -41,6 +41,30 @@ const findArticlesByTag = async (id) => {
     return article
 }
 
+
+const articleSearch = async (searchValue) => {
+    const selectQuery = `SELECT 
+    articles.id ,  
+    articles.title ,
+    articles.content,
+    articles.cover,articles.slug ,
+    tags.name AS tag, 
+    users.username
+    FROM articles
+    JOIN users 
+    ON articles.author_id = users.id
+    JOIN article_tag 
+    ON article_tag.article_id = articles.id
+    JOIN tags 
+    ON article_tag.tag_id = tags.id
+    WHERE articles.title LIKE ? OR articles.content LIKE ? OR tags.name LIKE ?
+    GROUP BY articles.id;`
+
+    const [result] = await db.execute(selectQuery, [`%${searchValue}%`, `%${searchValue}%`, `%${searchValue}%`])
+
+    return result
+}
+
 const findOne = async (slug) => {
 
     const selectQuery = "SELECT * FROM articles WHERE slug = ?"
@@ -64,6 +88,7 @@ module.exports = {
     findAll,
     findArticlesByTag,
     findOne,
+    articleSearch,
     addTag,
     deleteOne
 }
